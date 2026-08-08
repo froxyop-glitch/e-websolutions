@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>e-Web Solutions — Competition Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --saffron: #FF9933;
+    --saffron-light: #ffb870;
+    --white: #FFFFFF;
+    --green: #138808;
+    --green-light: #28a745;
+    --navy: #000080;
+    --navy-deep: #000040;
+    
+    --ink: #16151c;
+    --muted: #e0e0e0;
+    --border: rgba(255,255,255,0.3);
+    --border-soft: rgba(255,255,255,0.1);
+    
+    --danger: #ff4d4d;
+    --danger-bg: rgba(255, 77, 77, 0.1);
+    --success: #28a745;
+    --success-bg: rgba(40, 167, 69, 0.1);
+    
+    --radius: 12px;
+    --shadow: 0 15px 30px rgba(0,0,0,0.3);
+    --shadow-sm: 0 5px 15px rgba(0,0,0,0.2);
+    --shadow-lg: 0 25px 50px rgba(0,0,0,0.4);
+    
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-panel: rgba(0, 0, 64, 0.6); /* dark navy transparent */
+  }
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0; font-family:'Outfit', sans-serif; color: var(--white); -webkit-font-smoothing: antialiased;
+    background: linear-gradient(135deg, var(--saffron), #ffffff, var(--green));
+    background-attachment: fixed;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+  
+  /* Dark overlay to make glass panels pop */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: -1;
+  }
+
+  ::selection{ background: var(--saffron); color: var(--navy-deep); }
+  a{ color: inherit; }
+  button{ font-family: inherit; }
+  :focus-visible{ outline: 3px solid var(--saffron); outline-offset: 2px; }
+
+  header.top{
+    position: relative; overflow: hidden; color: #fff;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0.2));
+    border-bottom: 2px solid var(--border);
+    backdrop-filter: blur(10px);
+  }
+ .top-inner{ position: relative; max-width: 1100px; margin: 0 auto; padding: 30px 24px 0; display:flex; align-items:center; justify-content: space-between; gap: 20px; flex-wrap: wrap; z-index:1; }
+ .brand{ display:flex; align-items:center; gap:16px; }
+ .brand-text.eyebrow{ font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--saffron-light); font-weight: 600; }
+ .brand-text h1{ font-weight: 800; font-size: clamp(21px, 3vw, 29px); margin: 3px 0 0; letter-spacing: 0.015em; text-shadow: 2px 2px 0 rgba(0,0,0,0.35); }
+  nav.tabs{ display:flex; gap:10px; position: relative; max-width: 1100px; margin: 24px auto 0; padding: 0 24px; z-index:1; }
+  nav.tabs button{ background:none; border:none; color: rgba(255,255,255,0.7); padding: 12px 20px; font-size: 16px; font-weight: 600; cursor:pointer; border-bottom: 3px solid transparent; transition: all .2s ease; }
+  nav.tabs button:hover{ color:#fff; background: rgba(255,255,255,0.1); border-radius: 6px 6px 0 0; }
+  nav.tabs button.active{ color:#fff; border-color: var(--saffron); background: rgba(255, 153, 51, 0.15); border-radius: 6px 6px 0 0;}
+  main{ max-width: 1100px; margin: 0 auto; padding: 44px 24px 80px; position: relative; z-index:1; }
+ .view{ display:none; animation: fadeIn.3s ease; }
+ .view.active{ display:block; }
+  @keyframes fadeIn{ from{ opacity:0; transform: translateY(10px);} to{opacity:1; transform:none;} }
+ .panel{ background: var(--glass-panel); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); backdrop-filter: blur(15px); }
+ .form-panel{ padding: 34px; max-width: 640px; margin: 0 auto; position:relative; }
+ .form-panel::before{ content:"COMPETITION ENTRY"; position:absolute; top:-13px; left:28px; background: var(--saffron); color: var(--navy-deep); font-size:12px; font-weight: 800; letter-spacing:0.14em; padding: 4px 12px; border-radius:20px; }
+ .form-title{ font-size: 28px; font-weight:800; margin:0 0 6px; color: var(--white); }
+ .form-sub{ color: var(--muted); font-size: 15px; margin: 0 0 28px; }
+ .field{ margin-bottom: 18px; }
+ .field label{ display:block; font-size: 13px; font-weight:600; margin-bottom:6px; color: var(--saffron-light); text-transform: uppercase; letter-spacing: 0.05em; }
+ .row2{ display:grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 560px){.row2{ grid-template-columns: 1fr; } }
+  
+  input[type=text], input[type=email], input[type=url], input[type=password], select{ width:100%; padding: 12px 14px; border-radius:8px; border:1px solid var(--border); background:rgba(255,255,255,0.1); font-size:15px; color: var(--white); transition: all .2s ease; outline: none; }
+  input:focus, select:focus{ border-color: var(--saffron); background:rgba(255,255,255,0.2); box-shadow: 0 0 10px rgba(255,153,51,0.3); }
+  input::placeholder { color: rgba(255,255,255,0.4); }
+  select{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23ffffff' stroke-width='1.8' fill='none'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position: right 14px center; }
+  select option { background: var(--navy-deep); color: #fff; }
+  
+ .drop{ border: 2px dashed var(--border); border-radius: 8px; padding: 30px; text-align:center; background: rgba(0,0,0,0.2); cursor:pointer; transition: all .2s ease; }
+ .drop.drag{ border-color: var(--saffron); background: rgba(255,153,51,0.1); border-style: solid; }
+ .drop svg{ width:36px; height:36px; margin-bottom:12px; color: var(--saffron); }
+ .drop p{ margin:0; font-size:15px; color: var(--muted); }
+ .drop.browse{ color: var(--saffron-light); font-weight:600; text-decoration: underline; }
+ .file-chip{ display:flex; align-items:center; gap:10px; background:rgba(0,0,0,0.4); border:1px solid var(--border); border-radius:8px; padding:12px 14px; margin-top:10px; font-size:14px; }
+ .file-chip.name{ font-family:'IBM Plex Mono', monospace; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+ .file-chip button{ background:none; border:none; color:var(--danger); cursor:pointer; font-size:14px; font-weight:600; }
+ .error-text{ color: var(--danger); font-size:13px; margin-top:8px; display:none; }
+ .error-text.show{ display:block; }
+ 
+ .submit-btn{ width:100%; margin-top:12px; background: linear-gradient(45deg, var(--saffron), #ffffff, var(--green)); color:var(--navy-deep); border: none; padding: 16px; border-radius: 8px; font-size:18px; font-weight: 800; cursor:pointer; transition: transform.2s ease, box-shadow.2s ease; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow: var(--shadow-sm); }
+ .submit-btn:hover{ transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
+ .submit-btn:disabled{ opacity:0.6; cursor:not-allowed; transform:none; }
+ .spinner{ width:18px; height:18px; border-radius:50%; border:2px solid rgba(0,0,128,0.2); border-top-color:var(--navy-deep); animation: spin.7s linear infinite; }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+  
+ .dash-head{ display:flex; align-items:flex-end; justify-content:space-between; gap: 16px; flex-wrap:wrap; margin-bottom:22px; }
+ .dash-head h2{ font-size:28px; font-weight:800; margin:0 0 4px; color: var(--white); }
+ .dash-head p{ margin:0; color:var(--muted); font-size:15px; }
+ .refresh-btn{ background: rgba(255,255,255,0.1); border:1px solid var(--border); color:var(--white); padding:10px 18px; border-radius:8px; font-size:15px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px; transition: all .2s ease; }
+ .refresh-btn:hover{ background: rgba(255,255,255,0.2); transform: translateY(-2px); }
+ .refresh-btn svg{ width:16px; height:16px; }
+ .refresh-btn.spinning svg{ animation: spin 0.8s linear infinite; }
+ 
+ .stats{ display:grid; grid-template-columns: repeat(4, 1fr); gap:16px; margin-bottom: 26px; }
+  @media (max-width: 720px){.stats{ grid-template-columns: repeat(2,1fr); } }
+ .stat{ padding:20px; text-align: center; }
+ .stat.num{ font-size:32px; font-weight:800; color: var(--saffron); }
+ .stat.lbl{ font-size:12px; color:var(--muted); margin-top:4px; text-transform:uppercase; letter-spacing:0.05em; font-weight: 600; }
+ 
+ .toolbar{ display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; align-items: center; }
+ .toolbar input,.toolbar select{ flex:2; min-width:140px; background: rgba(0,0,0,0.3); }
+ .backup-actions { display: flex; gap: 8px; flex: 1; min-width: 180px; justify-content: flex-end; }
+ .backup-btn { background: rgba(255,255,255,0.1); border: 1px solid var(--border); color: var(--white); padding: 12px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; transition: all .2s ease; }
+ .backup-btn:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
+ 
+ .sub-card{ padding:20px; margin-bottom:16px; display:grid; grid-template-columns: 1fr auto; gap:16px; align-items:center; transition: all .2s ease; }
+ .sub-card:hover{ transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--saffron); }
+ .sub-card.main-info{ display:flex; flex-direction:column; gap:6px; }
+ .sub-card.title{ font-weight:800; font-size:18px; color: var(--saffron-light); }
+ .sub-card.meta{ font-size:14px; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 12px; }
+ .sub-card.meta.id{ font-family:'IBM Plex Mono', monospace; color: var(--white); }
+ .tag{ display:inline-block; font-size:12px; font-weight: 800; letter-spacing:0.05em; padding: 4px 12px; border-radius: 20px; background: var(--green); color: var(--white); }
+ 
+ .actions{ display:flex; gap:10px; }
+ .actions button{ border:1px solid var(--border); background:rgba(255,255,255,0.1); color:var(--white); padding: 10px 16px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; transition: all .2s ease; }
+ .actions button:hover{ background:rgba(255,255,255,0.2); transform: translateY(-2px); }
+ .actions.del-btn{ color: #ff8080; border-color: rgba(255, 77, 77, 0.4); }
+ .actions.del-btn:hover{ background: var(--danger-bg); border-color: var(--danger); }
+ 
+ .empty-state{ text-align:center; padding: 60px 20px; color: var(--muted); }
+ .empty-state svg{ width:50px; height:50px; margin-bottom:16px; color: var(--saffron); opacity:0.8; }
+ .empty-state h3{ font-weight:800; color:var(--white); margin:0 0 8px; font-size:22px; }
+ 
+ .skeleton{ height:90px; border-radius:8px; margin-bottom:16px; border: 1px solid var(--border-soft); background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 37%, rgba(255,255,255,0.05) 63%); background-size: 400% 100%; animation: shimmer 1.5s ease infinite; }
+  @keyframes shimmer{ 0%{ background-position: 100% 0;} 100%{ background-position: 0 0; } }
+  
+ .overlay{ position:fixed; inset:0; background: rgba(0,0,0,0.8); display:flex; align-items:center; justify-content:center; padding:20px; opacity:0; pointer-events:none; transition: opacity.3s ease; z-index: 100; backdrop-filter: blur(5px); }
+ .overlay.show{ opacity:1; pointer-events:auto; }
+ .modal{ background: var(--navy-deep); border-radius: 12px; max-width: 440px; width:100%; padding: 40px 30px; text-align:center; box-shadow: var(--shadow-lg); transform: translateY(20px) scale(0.95); transition: all .3s cubic-bezier(.2,.9,.3,1.3); border: 1px solid var(--saffron); }
+ .overlay.show.modal{ transform: translateY(0) scale(1); }
+ 
+ .auth-panel { padding: 40px; max-width: 440px; margin: 60px auto; position: relative; }
+ .auth-panel::before{ content:"ADMIN CLEARANCE"; position:absolute; top:-13px; left:28px; background: var(--navy-deep); color:var(--saffron); font-size:12px; font-weight: 800; letter-spacing:0.14em; padding: 4px 12px; border: 1px solid var(--saffron); border-radius:20px; }
+ 
+ .check-wrap{ width:70px; height:70px; margin:0 auto 20px; border-radius:50%; background: var(--success-bg); display:flex; align-items:center; justify-content:center; border: 2px solid var(--success); }
+ .check-wrap svg{ width:36px; height:36px; }
+ .check-wrap path{ stroke: var(--success); stroke-width:3; fill:none; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray: 40; stroke-dashoffset:40; animation: draw.5s ease.2s forwards; }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+ .modal h3{ font-size:24px; font-weight:800; margin: 0 0 10px; color: var(--white); }
+ .modal p{ color: var(--muted); font-size:15px; margin: 0 0 20px; line-height:1.6; }
+ .modal.sub-id{ font-family:'IBM Plex Mono', monospace; background:rgba(255,255,255,0.1); border:1px solid var(--border); border-radius:6px; padding:10px 14px; font-size:14px; color: var(--saffron-light); margin-bottom:24px; word-break: break-all; }
+ .modal-actions{ display:flex; gap:12px; }
+ .modal-actions button{ flex:1; padding:12px; border-radius:8px; font-size:15px; font-weight:700; cursor:pointer; transition: all .2s ease; border: none; }
+ .modal-actions button:hover{ transform: translateY(-2px); }
+ .modal-actions.primary{ background: var(--saffron); color:var(--navy-deep); }
+ .modal-actions.ghost{ background:rgba(255,255,255,0.1); color: var(--white); border: 1px solid var(--border); }
+ 
+ .toast{ position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--navy-deep); color:#fff; padding: 14px 24px; border-radius: 8px; font-size:15px; box-shadow: var(--shadow-lg); opacity:0; pointer-events:none; transition: all.3s ease; z-index: 200; border: 1px solid var(--saffron); }
+ .toast.show{ opacity:1; transform: translateX(-50%) translateY(0); }
+ .storage-banner{ display:flex; align-items:center; gap:12px; background: rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:8px; padding:12px 16px; font-size:14px; color: var(--white); margin-bottom:20px; }
+ .storage-banner svg{ width:18px; height:18px; flex-shrink:0; color: var(--saffron); }
+  footer{ text-align:center; padding: 30px 24px 50px; color: rgba(255,255,255,0.5); font-size:13px; position: relative; z-index:1; border-top: 1px solid var(--border-soft); margin-top: 30px; }
+
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="brand-text"><div class="eyebrow">e-Web Solutions</div><h1>Graphics Design Competition Portal</h1></div>
+    </div>
+  </div>
+  <nav class="tabs"><button class="tab-btn active" data-view="submit">Submit Entry</button><button class="tab-btn" data-view="dashboard">Admin Dashboard</button></nav>
+</header>
+
+<main>
+  <section id="view-submit" class="view active">
+    <div class="panel form-panel">
+      <h2 class="form-title">Submit your artwork</h2>
+      <p class="form-sub">Fill in your details and attach your design as a PDF (max 3.5 MB). Your entry is saved securely to our systems.</p>
+      <form id="submitForm" novalidate>
+        <div class="row2">
+          <div class="field"><label for="stuName">Full name</label><input type="text" id="stuName" required placeholder="Your Name"></div>
+          <div class="field"><label for="stuEmail">Email Address</label><input type="email" id="stuEmail" required placeholder="name@example.com"></div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="stuSubject">Category</label>
+            <select id="stuSubject" required>
+              <option value="" disabled selected>Select category</option>
+              <option value="UI/UX Design">UI/UX Design</option>
+              <option value="3D Art">3D Art</option>
+              <option value="Branding">Branding</option>
+              <option value="Illustration">Illustration</option>
+            </select>
+          </div>
+          <div class="field"><label for="projTitle">Project title</label><input type="text" id="projTitle" required placeholder="e.g. Independence Theme"></div>
+        </div>
+        <div class="field"><label for="stuPortfolio">Portfolio Link (Optional)</label><input type="url" id="stuPortfolio" placeholder="https://dribbble.com/yourprofile"></div>
+        <div class="field"><label>Artwork / Report (PDF, up to 3.5 MB)</label>
+          <div class="drop" id="dropZone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 16V4M12 4l-4 4M12 4l4 4" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3" stroke-linecap="round"/></svg><p>Drag &amp; drop your PDF here, or <span class="browse">browse</span></p><input type="file" id="fileInput" accept="application/pdf" style="display:none"></div>
+          <div id="fileChip" class="file-chip" style="display:none"><span class="name" id="fileChipName"></span><span id="fileChipSize"></span><button type="button" id="removeFile">Remove</button></div>
+          <div class="error-text" id="fileError">File must be a PDF and no larger than 3.5 MB.</div>
+        </div>
+        <button type="submit" class="submit-btn" id="submitBtn">Submit Entry</button>
+      </form>
+    </div>
+  </section>
+
+  <section id="view-auth" class="view">
+    <div class="panel auth-panel">
+      <h2 class="form-title" style="text-align:center; margin-bottom: 20px;">Admin Access</h2>
+      <form id="authForm">
+        <div class="field"><label for="authId">Admin ID</label><input type="text" id="authId" required placeholder="Enter Admin ID"></div>
+        <div class="field"><label for="authPass">Security Passkey</label><input type="password" id="authPass" required placeholder="Enter Secret Password"></div>
+        <button type="submit" class="submit-btn" style="margin-top: 15px;">Authenticate</button>
+      </form>
+    </div>
+  </section>
+
+  <section id="view-dashboard" class="view">
+    <div class="dash-head">
+      <div><h2>Submissions dashboard</h2><p>Streaming competition entries — synced automatically.</p></div>
+      <button class="refresh-btn" id="refreshBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 0114-5.3M20 12a8 8 0 01-14 5.3" stroke-linecap="round"/><path d="M18 4v4h-4M6 20v-4h4" stroke-linecap="round" stroke-linejoin="round"/></svg>Refresh</button>
+    </div>
+    <div class="storage-banner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7a8 4 0 0016 0M4 7a8 4 0 0116 0v10a8 4 0 01-16 0V7z" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="storageBannerText">Showing data stored securely.</span></div>
+    <div class="stats">
+      <div class="panel stat"><div class="num" id="statTotal">0</div><div class="lbl">Total entries</div></div>
+      <div class="panel stat"><div class="num" id="statToday">0</div><div class="lbl">Submitted today</div></div>
+      <div class="panel stat"><div class="num" id="statDepts">0</div><div class="lbl">Categories represented</div></div>
+      <div class="panel stat"><div class="num" id="statSize">0 MB</div><div class="lbl">Total storage used</div></div>
+    </div>
+    
+    <div class="toolbar">
+      <input type="text" id="searchInput" placeholder="Search by name, email or title…">
+      <select id="subjectFilter"><option value="">All Categories</option></select>
+      <div class="backup-actions"><button class="backup-btn" id="exportBtn">Export Data</button><button class="backup-btn" id="importBtn">Import Data</button><input type="file" id="importFile" accept=".json" style="display:none"></div>
+    </div>
+    
+    <div id="listContainer"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+  </section>
+</main>
+
+<footer>Made with internet, Not with prompt· @subhadip_sengupta (Themed for e-Web Solutions)</footer>
+
+<div class="overlay" id="successOverlay"><div class="modal"><div class="check-wrap"><svg viewBox="0 0 24 24"><path d="M4 13l5 5L20 6"/></svg></div><h3>Entry received</h3><p id="modalMsg">Your project has been submitted successfully.</p><div class="sub-id" id="modalSubId"></div><div class="modal-actions"><button class="ghost" id="modalAnother">Submit another</button><button class="primary" id="modalDashboard">Go to dashboard</button></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const MAX_SIZE = 3.5 * 1024 * 1024;
+  let selectedFile = null; let allSubmissions = []; let isAuthenticated = false;
+
+  const DRIVE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzvzLwB_cA353Xqwb8Z0arZ8nWmlrdV_wl260DOcuvXpJs7MYDzktqPStTb5OWXf-wfIg/exec';
+
+  function driveConfigured(){ return DRIVE_SCRIPT_URL && DRIVE_SCRIPT_URL.indexOf('https://script.google.com') === 0; }
+  function uploadToDrive(record){ if(!driveConfigured()) return Promise.resolve({ success:false, error:'not-configured' }); return fetch(DRIVE_SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(record) }).then(r => r.json()).catch(err => ({ success:false, error: String(err) })); }
+  function fetchFromDrive(){ if(!driveConfigured()) return Promise.resolve([]); return fetch(DRIVE_SCRIPT_URL + '?action=list').then(r => r.json()).then(list => Array.isArray(list)? list : []).catch(() => []); }
+  function deleteFromDrive(id){ if(!driveConfigured()) return Promise.resolve(false); return fetch(DRIVE_SCRIPT_URL + '?action=delete&id=' + encodeURIComponent(id)).then(r => r.json()).then(res =>!!(res && res.success)).catch(() => false); }
+
+  let backupCache = []; const DB_NAME = 'DAT_EWebSolution_DB'; const DB_VERSION = 1; const STORE_NAME = 'submissions'; let db = null;
+  function initDB() { return new Promise((resolve) => { try { const request = indexedDB.open(DB_NAME, DB_VERSION); request.onupgradeneeded = (e) => { const database = e.target.result; if (!database.objectStoreNames.contains(STORE_NAME)) { database.createObjectStore(STORE_NAME, { keyPath: 'id' }); } }; request.onsuccess = (e) => { db = e.target.result; resolve(true); }; request.onerror = () => { resolve(false); }; } catch(err) { resolve(false); } }); }
+  function saveToIDB(record) { return new Promise((resolve) => { if (!db) return resolve(false); try { const tx = db.transaction(STORE_NAME, 'readwrite'); const store = tx.objectStore(STORE_NAME); store.put(record); tx.oncomplete = () => resolve(true); tx.onerror = () => resolve(false); } catch(e) { resolve(false); } }); }
+  function getAllFromIDB() { return new Promise((resolve) => { if (!db) return resolve([]); try { const tx = db.transaction(STORE_NAME, 'readonly'); const store = tx.objectStore(STORE_NAME); const req = store.getAll(); req.onsuccess = () => resolve(req.result || []); req.onerror = () => resolve([]); } catch(e) { resolve([]); } }); }
+  function deleteFromIDB(id) { return new Promise((resolve) => { if (!db) return resolve(false); try { const tx = db.transaction(STORE_NAME, 'readwrite'); const store = tx.objectStore(STORE_NAME); store.delete(id); tx.oncomplete = () => resolve(true); tx.onerror = () => resolve(false); } catch(e) { resolve(false); } }); }
+
+  const tabBtns = document.querySelectorAll('.tab-btn'); const views = { submit: document.getElementById('view-submit'), auth: document.getElementById('view-auth'), dashboard: document.getElementById('view-dashboard') };
+  tabBtns.forEach(btn => { btn.addEventListener('click', () => switchView(btn.dataset.view)); });
+  function switchView(name){ let targetedView = name; if(name === 'dashboard' &&!isAuthenticated) { targetedView = 'auth'; } tabBtns.forEach(b => b.classList.toggle('active', b.dataset.view === name)); Object.entries(views).forEach(([k, el]) => el.classList.toggle('active', k === targetedView)); if(targetedView === 'dashboard') loadSubmissions(); }
+
+  // Auth Update: User Subhadip / Pass 199
+  const authForm = document.getElementById('authForm'); authForm.addEventListener('submit', (e) => { e.preventDefault(); const idVal = document.getElementById('authId').value.trim(); const passVal = document.getElementById('authPass').value; if(idVal === "Subhadip" && passVal === "199") { isAuthenticated = true; showToast("Access Authorized."); authForm.reset(); switchView('dashboard'); } else { showToast("Access Denied. Invalid credentials."); } });
+
+  const toastEl = document.getElementById('toast'); let toastTimer; function showToast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.classList.remove('show'), 3200); }
+
+  const dropZone = document.getElementById('dropZone'); const fileInput = document.getElementById('fileInput'); const fileChip = document.getElementById('fileChip'); const fileChipName = document.getElementById('fileChipName'); const fileChipSize = document.getElementById('fileChipSize'); const fileError = document.getElementById('fileError'); const removeFile = document.getElementById('removeFile');
+  dropZone.addEventListener('click', () => fileInput.click()); dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag'); }); dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag')); dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drag'); if(e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]); }); fileInput.addEventListener('change', e => { if(e.target.files.length) handleFile(e.target.files[0]); }); removeFile.addEventListener('click', () => { selectedFile = null; fileChip.style.display='none'; dropZone.style.display='block'; fileInput.value=''; });
+  function handleFile(file){ fileError.classList.remove('show'); if(file.type!== 'application/pdf' &&!file.name.toLowerCase().endsWith('.pdf')){ fileError.textContent = 'Only PDF files are accepted.'; fileError.classList.add('show'); return; } if(file.size > MAX_SIZE){ fileError.textContent = 'File is too large — the limit is 3.5 MB.'; fileError.classList.add('show'); return; } selectedFile = file; fileChipName.textContent = file.name; fileChipSize.textContent = formatBytes(file.size); fileChip.style.display = 'flex'; dropZone.style.display = 'none'; }
+  function formatBytes(bytes){ if(bytes < 1024) return bytes + ' B'; if(bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB'; return (bytes/(1024*1024)).toFixed(2) + ' MB'; }
+  function fileToBase64(file){ return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result.split(',')[1]); reader.onerror = () => reject(new Error('Could not read file')); reader.readAsDataURL(file); }); }
+
+  function handlePdfAction(record, actionType) { if(record.driveFileUrl){ if(actionType === 'view'){ window.open(record.driveFileUrl, '_blank'); } else { window.open(record.driveDownloadUrl || record.driveFileUrl, '_blank'); } return; } if(!record.fileBase64){ showToast('This submission has no file copy.'); return; } try { const byteCharacters = atob(record.fileBase64); const byteNumbers = new Array(byteCharacters.length); for (let i = 0; i < byteCharacters.length; i++) { byteNumbers[i] = byteCharacters.charCodeAt(i); } const byteArray = new Uint8Array(byteNumbers); const blob = new Blob([byteArray], { type: 'application/pdf' }); const blobUrl = URL.createObjectURL(blob); if (actionType === 'view') { window.open(blobUrl, '_blank'); } else { const dlAnchor = document.createElement('a'); dlAnchor.href = blobUrl; dlAnchor.download = record.fileName; document.body.appendChild(dlAnchor); dlAnchor.click(); dlAnchor.remove(); } setTimeout(() => URL.revokeObjectURL(blobUrl), 10000); } catch(err) { showToast("Unable to decode PDF."); } }
+
+  const form = document.getElementById('submitForm'); const submitBtn = document.getElementById('submitBtn');
+  form.addEventListener('submit', async (e) => { e.preventDefault(); if(!form.checkValidity()){ form.reportValidity(); return; } if(!selectedFile){ fileError.textContent = 'Please attach your project report as a PDF.'; fileError.classList.add('show'); return; } submitBtn.disabled = true; submitBtn.innerHTML = '<span class="spinner"></span> Submitting…'; try { const base64 = await fileToBase64(selectedFile); const id = (crypto.randomUUID? crypto.randomUUID() : 'sub-' + Date.now() + '-' + Math.random().toString(16).slice(2)).slice(0, 8); 
+      
+      const record = { 
+        id, 
+        name: document.getElementById('stuName').value.trim(), 
+        email: document.getElementById('stuEmail').value.trim(), 
+        subject: document.getElementById('stuSubject').value, 
+        title: document.getElementById('projTitle').value.trim(), 
+        portfolio: document.getElementById('stuPortfolio').value.trim(),
+        fileName: selectedFile.name,
+        fileSize: selectedFile.size,
+        fileBase64: base64,
+        submittedAt: new Date().toISOString()
+      };
+
+      const driveResult = await uploadToDrive(record);
+      if(driveResult && driveResult.success){
+        record.driveFileId = driveResult.fileId;
+        record.driveFileUrl = driveResult.fileUrl;
+        record.driveDownloadUrl = driveResult.downloadUrl || driveResult.fileUrl;
+        delete record.fileBase64;
+      }
+
+      backupCache.push(record);
+      try { localStorage.setItem('sub_item:' + id, JSON.stringify(record)); } catch(e){}
+      await saveToIDB(record);
+
+      document.getElementById('modalSubId').textContent = 'Submission ID: ' + id;
+      document.getElementById('modalMsg').textContent = driveResult && driveResult.success
+       ? '"' + record.title + '" has been saved to Google Drive successfully.'
+        : '"' + record.title + '" has been captured locally.';
+      document.getElementById('successOverlay').classList.add('show');
+
+      form.reset();
+      selectedFile = null;
+      fileChip.style.display = 'none';
+      dropZone.style.display = 'block';
+
+    } catch(err){
+      showToast('Something went wrong while submitting. Please try again.');
+      console.error(err);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit Entry';
+    }
+  });
+
+  document.getElementById('modalAnother').addEventListener('click', () => {
+    document.getElementById('successOverlay').classList.remove('show');
+  });
+  document.getElementById('modalDashboard').addEventListener('click', () => {
+    document.getElementById('successOverlay').classList.remove('show');
+    switchView('dashboard');
+  });
+
+  const listContainer = document.getElementById('listContainer');
+  const refreshBtn = document.getElementById('refreshBtn');
+  const searchInput = document.getElementById('searchInput');
+  const subjectFilter = document.getElementById('subjectFilter');
+
+  refreshBtn.addEventListener('click', () => loadSubmissions());
+  searchInput.addEventListener('input', renderList);
+  subjectFilter.addEventListener('change', renderList);
+
+  async function loadSubmissions(){
+    refreshBtn.classList.add('spinning');
+    listContainer.innerHTML = '<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>';
+
+    const banner = document.getElementById('storageBannerText');
+    banner.textContent = driveConfigured()
+     ? 'Showing submissions synced from Google Drive via Google Sheets backend.'
+      : 'Google Drive isn\'t configured yet. Falling back to local storage.';
+
+    const unifiedMap = new Map();
+    backupCache.forEach(r => { if(r && r.id) unifiedMap.set(r.id, r); });
+
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith('sub_item:')) {
+          const raw = localStorage.getItem(k);
+          if (raw) { const parsed = JSON.parse(raw); if(parsed && parsed.id) unifiedMap.set(parsed.id, parsed); }
+        }
+      }
+    } catch(e){}
+
+    const dbItems = await getAllFromIDB();
+    dbItems.forEach(r => { if(r && r.id) unifiedMap.set(r.id, r); });
+
+    try {
+      const liveItems = await fetchFromDrive();
+      if(Array.isArray(liveItems) && liveItems.length > 0) {
+        liveItems.forEach(r => { if(r && r.id) unifiedMap.set(r.id, r); });
+      }
+    } catch(e){}
+
+    allSubmissions = Array.from(unifiedMap.values());
+    backupCache = [...allSubmissions];
+
+    refreshBtn.classList.remove('spinning');
+    populateFilters();
+    renderStats();
+    renderList();
+  }
+
+  const exportBtn = document.getElementById('exportBtn');
+  const importBtn = document.getElementById('importBtn');
+  const importFile = document.getElementById('importFile');
+
+  exportBtn.addEventListener('click', () => {
+    if (allSubmissions.length === 0) { showToast("No submissions to export."); return; }
+    try {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allSubmissions));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "EWebSolution_Submissions_Backup_" + new Date().toISOString().slice(0,10) + ".json");
+      document.body.appendChild(downloadAnchor); downloadAnchor.click(); downloadAnchor.remove();
+      showToast("Backup downloaded successfully.");
+    } catch(err) { showToast("Could not generate export file."); }
+  });
+
+  importBtn.addEventListener('click', () => importFile.click());
+  importFile.addEventListener('change', (e) => {
+    const file = e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      try {
+        const parsedList = JSON.parse(event.target.result);
+        if (!Array.isArray(parsedList)) { showToast("Invalid file structure."); return; }
+        let counter = 0;
+        for (const record of parsedList) {
+          if (record && record.id && record.title) {
+            if (!backupCache.some(existing => existing.id === record.id)) {
+              backupCache.push(record);
+              try { localStorage.setItem('sub_item:' + record.id, JSON.stringify(record)); } catch(e){}
+              await saveToIDB(record);
+              counter++;
+            }
+          }
+        }
+        showToast(`Imported ${counter} records.`);
+        loadSubmissions();
+      } catch(err) { showToast("Error processing file."); }
+    };
+    reader.readAsText(file); importFile.value = '';
+  });
+
+  function populateFilters(){
+    const currentSubj = subjectFilter.value;
+    const subjects = [...new Set(allSubmissions.map(r => r.subject).filter(Boolean))].sort();
+    
+    subjectFilter.innerHTML = '<option value="">All Categories</option>' + subjects.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
+    subjectFilter.value = currentSubj;
+  }
+
+  function renderStats(){
+    document.getElementById('statTotal').textContent = allSubmissions.length;
+    const todayStr = new Date().toDateString();
+    const todayCount = allSubmissions.filter(r => new Date(r.submittedAt).toDateString() === todayStr).length;
+    document.getElementById('statToday').textContent = todayCount;
+    document.getElementById('statDepts').textContent = new Set(allSubmissions.map(r => r.subject).filter(Boolean)).size;
+    const totalBytes = allSubmissions.reduce((sum, r) => sum + (r.fileSize || 0), 0);
+    document.getElementById('statSize').textContent = (totalBytes/(1024*1024)).toFixed(1) + ' MB';
+  }
+
+  function renderList(){
+    const q = searchInput.value.trim().toLowerCase();
+    const subj = subjectFilter.value;
+
+    let filtered = allSubmissions.filter(r => {
+      const matchesQ =!q || (r.name && r.name.toLowerCase().includes(q)) || (r.email && r.email.toLowerCase().includes(q)) || (r.title && r.title.toLowerCase().includes(q));
+      const matchesSubj = !subj || r.subject === subj;
+      return matchesQ && matchesSubj;
+    });
+    filtered.sort((a,b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+
+    if(filtered.length === 0){
+      listContainer.innerHTML = `<div class="panel empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6M9 16h6M9 8h6M5 4h10l4 4v12a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z" stroke-linecap="round" stroke-linejoin="round"/></svg><h3>${allSubmissions.length === 0? 'No entries yet' : 'No matches found'}</h3><p>${allSubmissions.length === 0? 'The first entry submitted will appear here.' : 'Try a different search term or filter.'}</p></div>`;
+      return;
+    }
+
+    listContainer.innerHTML = filtered.map(r => {
+      const date = new Date(r.submittedAt);
+      const dateStr = date.toLocaleDateString(undefined, { day:'2-digit', month:'short', year:'numeric' }) + ' · ' + date.toLocaleTimeString(undefined, {hour:'2-digit', minute:'2-digit'});
+      return `
+        <div class="panel sub-card" data-id="${r.id}">
+          <div class="main-info">
+            <span class="tag">${escapeHtml(r.subject)}</span>
+            <span class="title">${escapeHtml(r.title)}</span>
+            <span class="meta"><span>${escapeHtml(r.name)} · ${escapeHtml(r.email)}</span><span>${r.portfolio ? 'Portfolio: ' + escapeHtml(r.portfolio) : 'No Portfolio'}</span></span>
+            <span class="meta"><span class="id">${r.id}</span><span>${dateStr}</span><span>${formatBytes(r.fileSize || 0)}</span>${r.driveFileUrl? '<span>☁️ Drive</span>' : ''}</span>
+          </div>
+          <div class="actions">
+            <button class="view-pdf-btn" data-viewid="${r.id}">View PDF</button>
+            <button class="dl-pdf-btn" data-dlid="${r.id}">Download</button>
+            <button class="del-btn" data-del="${r.id}">Delete</button>
+          </div>
+        </div>`;
+    }).join('');
+
+    listContainer.querySelectorAll('.view-pdf-btn').forEach(btn => { btn.addEventListener('click', () => { const entry = allSubmissions.find(r => r.id === btn.dataset.viewid); if(entry) handlePdfAction(entry, 'view'); }); });
+    listContainer.querySelectorAll('.dl-pdf-btn').forEach(btn => { btn.addEventListener('click', () => { const entry = allSubmissions.find(r => r.id === btn.dataset.dlid); if(entry) handlePdfAction(entry, 'download'); }); });
+    listContainer.querySelectorAll('[data-del]').forEach(btn => { btn.addEventListener('click', () => deleteSubmission(btn.dataset.del)); });
+  }
+
+  async function deleteSubmission(id){
+    if(!confirm('Delete this submission? This cannot be undone.')) return;
+    backupCache = backupCache.filter(r => r.id!== id);
+    try { localStorage.removeItem('sub_item:' + id); } catch(e){}
+    await deleteFromIDB(id);
+    await deleteFromDrive(id);
+    allSubmissions = allSubmissions.filter(r => r.id!== id);
+    renderStats(); renderList(); showToast('Submission deleted.');
+  }
+
+  function escapeHtml(str){ return String(str || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+  async function boot() { await initDB(); await loadSubmissions(); }
+  boot();
+})();
+</script>
+</body>
+</html>
