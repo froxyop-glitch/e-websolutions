@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E Web Solution - Independence Day Special</title>
+    <meta name="description" content="Celebrate Freedom! Register for the Independence Day Graphics Design Competition hosted by E Web Solution.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="logo.svg">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="webgl-container">
+        <canvas id="webgl-canvas"></canvas>
+    </div>
+
+    <!-- The 3 background sections for scroll -->
+    <div class="tricolor-bg" id="bg-saffron"></div>
+    <div class="tricolor-bg" id="bg-white"></div>
+    <div class="tricolor-bg" id="bg-green"></div>
+
+    <nav>
+        <div class="logo">
+            <img src="logo.svg" alt="Logo" class="brand-logo">
+            <span>E Web Solution</span>
+        </div>
+        <a href="#register" class="btn-primary">Submit Project</a>
+    </nav>
+
+    <main>
+        <section class="hero section-saffron" id="hero">
+            <div class="content-block">
+                <h1>Celebrate Freedom with <br> <span class="highlight-white">Digital Art</span></h1>
+                <p>Join our special Independence Day Graphics Design Competition. Express the nation's glory through your creativity.</p>
+                <div class="scroll-indicator">
+                    <div class="mouse">
+                        <div class="wheel"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="details section-white" id="details">
+            <div class="content-block right">
+                <h2>Showcase Your <span class="highlight-navy">Patriotism</span></h2>
+                <p>We are looking for the most innovative and visually striking designs that celebrate our heritage, unity in diversity, and technological progress.</p>
+                <div class="features">
+                    <div class="feature">
+                        <h3>Patriotic</h3>
+                        <p>Theme Focus</p>
+                    </div>
+                    <div class="feature">
+                        <h3>₹1,00,000</h3>
+                        <p>Grand Prize</p>
+                    </div>
+                    <div class="feature">
+                        <h3>National</h3>
+                        <p>Recognition</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="register section-green" id="register">
+            <div class="content-block">
+                <div class="glass-panel">
+                    
+                    <form id="submission-form">
+                        <div class="input-group">
+                            <h2>Submit your project</h2>
+                            <h3>Join the <span class="highlight-white">Celebration</span></h3>
+                    
+                            <a href="portal.html" target="_blank" class="btn-primary">Submit Now</a>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Three.js and GSAP via CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
